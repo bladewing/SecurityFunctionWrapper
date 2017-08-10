@@ -1,8 +1,11 @@
-import netifaces, random
+import netifaces, time
 from urllib.request import Request, urlopen
 from flask import Flask, json
 from urllib.parse import urlencode
 
+# TODO: implement /attack detection
+# TODO: implement /unregister
+# TODO: implement /attack
 
 class ApiURI:
     REGISTER = "/register"
@@ -11,12 +14,12 @@ class ApiURI:
     DELETE = "/delete"
 class SAWrapper:
         app = Flask("WrapperInstance")
-        name = None
         group = None
         iface = None
         iface_mac = None
         controllerURL = None
         instanceID = None
+        regTimeout = 60
 
         def __init__(self, saGroup, controllerURL, saIface="default"):
             print("Initiating new Wrapper Instance")
@@ -40,6 +43,7 @@ class SAWrapper:
                     respData = json.loads(resp.read())
                     self.instanceID = respData['instanceID']
                     connected = True
+                    resp.close()
                     print("Registration complete!")
                     print("Wrapper Instance registered with Instance ID: {0}".format(self.instanceID))
                 if(resp.getcode() == 208):
@@ -47,25 +51,40 @@ class SAWrapper:
                     # Here: Already registered
                     print("Instance already registered. Carry on!")
                     connected = True
+                    resp.close()
                 else:
                     print("Connection failed. Retrying...")
 
-            # Connection Established, Wrapper Instance registered. Start Keep-Alive messages to keep being registered
+            # Connection Established, Wrapper Instance registered. Start Keep-Alive messages to keep registration
             # Parallel Processing for keepalive and run!
             self.keepalive()
-            # Run Fake Attack Detections with Markov Model
-            self.run()
 
         def keepalive(self):
-            i = 1
+            # IDEA: keep-alive via cron and flask?
+            kaData = {'type':'KEEP-ALIVE', 'name':self.instanceID, 'group':self.group, 'hw_addr':self.iface_mac,
+                      'token':'','misc':''}
+            jsonKaData = json.dumps(kaData)
             while(True):
-                if (i%1000000 == 1):
-                    print("Still in While")
-                i+=1
+                print("Waiting {0} seconds...".format(self.regTimeout))
+                time.sleep(self.regTimeout)
+                print("Initializing connection to Controller...")
+                kaConn = Request(self.controllerURL+ApiURI.KEEPALIVE, jsonKaData.encode("utf-8"), {'Content-Type':'application/json'})
+                kaResp = urlopen(kaConn)
+                if(kaResp.getcode() == 200):
+                    print("Keep-Alive successfully send! Closing conenction...")
+                    kaResp.close()
+                if(kaResp.getcode() == 500):
+                    print("Controller not available, retrying...")
+                    kaResp.close()
+                    continue
+                else:
+                    print("Failed to send keep-alive")
+                    # TODO what then?
+                    break
             return 1
 
+        @app.route('/attack', methods=['POST'])
         def run(self):
             # Send Fake Attack Detection Messages with Markov Model.
             print("ATTACK SEND")
-
             return 1
