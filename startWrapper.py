@@ -45,11 +45,10 @@ def main(argv):
         print("Optional: startWrapper.py --group groupname --url controllerURL (--iface interface)")
         sys.exit(0)
     #print("Starting Wrapper Instance with following parameters: {0}, {1}, {2}".format(group, controllerURL, saIface))
-    with SAWrapper as wrapper:
-        wrapperInstance = SAWrapper.Wrapper(group, controllerURL, iface)
-        thread1 = threading.Thread(target=wrapperInstance.keepalive)
-        thread1.setDaemon(True)
-        thread1.start()
+    wrapperInstance = SAWrapper.Wrapper(group, controllerURL, iface)
+    thread1 = threading.Thread(target=wrapperInstance.keepalive)
+    thread1.setDaemon(True)
+    thread1.start()
 
 
     @app.route('/attack', methods=['POST'])
