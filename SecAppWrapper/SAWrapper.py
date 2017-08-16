@@ -55,7 +55,6 @@ class Wrapper():
                 self.logger.info("[INIT] Wrapper Instance is ready!")
 
         def keepalive(self):
-            # IDEA: keep-alive via cron and flask?
             kaData = {'type': ApiURI.Type.KEEPALIVE.name, 'name': self.instanceID,
                       'group': self.group, 'hw_addr': self.iface_mac,
                       'token': '', 'misc': ''}
