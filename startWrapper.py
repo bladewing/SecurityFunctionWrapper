@@ -1,12 +1,12 @@
 # external libs
 from flask import Flask, json, Response, make_response, request
+import flask.logging
 from SecAppWrapper import ApiURI, SAWrapper
 import requests
 
 # Standard Libs
 from urllib.request import urlopen, Request
-import sys, getopt
-import threading
+import sys, getopt, threading, logging
 
 app = Flask(__name__)
 wrapperInstance = None
@@ -16,7 +16,7 @@ def main(argv):
     controllerURL = None
     iface = "default"
     try:
-        opts, args = getopt.getopt(argv, "hg:u:i:", ["group=", "url=", "iface="])
+        opts, args = getopt.getopt(argv, "vhg:u:i:", ["group=", "url=", "iface="])
     except getopt.GetoptError:
         print("startWrapper.py -g groupname -u controllerURL (-i interface)")
         print("startWrapper.py --group groupname --url controllerURL (--iface interface)")
@@ -24,6 +24,11 @@ def main(argv):
     if (len(argv) == 4):
         print("Using default interface.")
     for opt, arg in opts:
+        if(opt == '-v'):
+            ch = logging.StreamHandler()
+            ch.setLevel(logging.INFO)
+            ch.setFormatter(formatter)
+            logger.addHandler(ch)
         if(opt == '-h'):
             print("startWrapper.py -group groupname -url controllerURL -iface interface")
         elif(opt in ("-g", "--group")):
@@ -55,43 +60,55 @@ def main(argv):
     def attack():
         # Send Fake Attack Detection Messages with Markov Model.
         # Also works as attack detection message.
-        print("Wrapper ready: ",wrapperInstance.ready)
+        logger.info("[Attack] Wrapper ready, preparing data...") if wrapperInstance.ready else logger.warning("[Attack] Wrapper Instance not ready! Can't handle attacks from /attack")
         if (wrapperInstance.ready):
-            print("Incoming report from Security Appliance {0}".format(wrapperInstance.instanceID))
+            logger.info("[Attack] Incoming report from Security Appliance {0}".format(wrapperInstance.instanceID))
             # Report Data Structure:
             # { "rate": "20", "misc": "information (???)"}
             reportData = request.get_json()
-            print(reportData)
             # Attack Data Structure
             # {"type": "ATTACK", "name": "Firewall -1", "group": "firewall", "hw_addr": "00:00:00:00:00:01", "rate": "20",
             #  "token": "secure -token", "misc": "information" }
-            print("Preparing attack alert to Controller.")
+            logger.info("[Attack] Preparing attack alert to Controller.")
             attackData = {'type': ApiURI.Type.ATTACK.name, 'name': wrapperInstance.instanceID, 'group': wrapperInstance.group,
                           'hw_addr': wrapperInstance.iface_mac,
                           'rate': reportData['rate'], 'token': '', 'misc': ''}
             jsonAttackData = json.dumps(attackData)
-            print("Initializing connection to Controller...")
+            logger.info("[Attack] Initializing connection to Controller...")
             connected = False
             while (connected == False):
                 conn = Request(wrapperInstance.controllerURL + ApiURI.Type.ATTACK.value, jsonAttackData.encode("utf-8"),
                                {'Content-Type': 'application/json'})
                 attResp = urlopen(conn)
+                print("attResp.getcode(): ", attResp.getcode())
                 if (attResp.getcode() == 200):
-                    print("Successfully send attack report to Controller! Closing connection")
+                    logger.info("[Attack] Successfully send attack report to Controller! Closing connection")
                     connected = True
                     attResp.close()
                 else:
-                    print("Controller not available, retrying")
+                    logger.warning("[Attack] Controller not available, retrying")
                     continue
 
 
         else:
-            print("Wrapper not registered!")
+            logger.warning("[Attack] Wrapper not registered!")
             attResp = make_response("Wrapper not registered.")
             attResp.status_code = 503
             return attResp
         return 1
 
 if(__name__ == "__main__"):
+    # Create logger
+    logger = logging.getLogger('SecAppWrapper')
+    logger.setLevel(logging.INFO)
+    # Create FileHandler to save logs in File.
+    fh = logging.FileHandler('startWrapper.log')
+    # Format logger
+    formatter = logging.Formatter('%(asctime)s <%(name)s> - <%(levelname)s> : %(message)s')
+    fh.setFormatter(formatter)
+    logger.addHandler(fh)
+    #Adding FileHandler to logger of Flask App to merge log files.
+    app.logger.addHandler(fh)
+
     main(sys.argv[1:])
     app.run(debug=False, host='0.0.0.0', port=5001)
