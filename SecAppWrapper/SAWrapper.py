@@ -62,7 +62,6 @@ class Wrapper():
             while (self.ready):
                 self.logger.info("[KeepAlive] Waiting {0} seconds...".format(self.regTimeout))
                 time.sleep(self.regTimeout)
-                '''
                 self.logger.info("[KeepAlive] Initializing connection to Controller...")
                 kaConn = Request(self.controllerURL + ApiURI.Type.KEEPALIVE.value,
                                  jsonKaData.encode("utf-8"),
@@ -79,5 +78,4 @@ class Wrapper():
                     self.logger.warning("[KeepAlive] Failed to send keep-alive")
                     # TODO what then?
                     break
-                '''
             return 1

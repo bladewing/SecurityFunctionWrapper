@@ -61,11 +61,13 @@ def main(argv):
         # Send Fake Attack Detection Messages with Markov Model.
         # Also works as attack detection message.
         logger.info("[Attack] Wrapper ready, preparing data...") if wrapperInstance.ready else logger.warning("[Attack] Wrapper Instance not ready! Can't handle attacks from /attack")
+        resp = make_response("Lol")
         if (wrapperInstance.ready):
             logger.info("[Attack] Incoming report from Security Appliance {0}".format(wrapperInstance.instanceID))
             # Report Data Structure:
             # { "rate": "20", "misc": "information (???)"}
             reportData = request.get_json()
+            print(reportData)
             # Attack Data Structure
             # {"type": "ATTACK", "name": "Firewall -1", "group": "firewall", "hw_addr": "00:00:00:00:00:01", "rate": "20",
             #  "token": "secure -token", "misc": "information" }
@@ -84,6 +86,7 @@ def main(argv):
                 if (attResp.getcode() == 200):
                     logger.info("[Attack] Successfully send attack report to Controller! Closing connection")
                     connected = True
+                    resp.status_code = 200
                     attResp.close()
                 else:
                     logger.warning("[Attack] Controller not available, retrying")
@@ -95,7 +98,7 @@ def main(argv):
             attResp = make_response("Wrapper not registered.")
             attResp.status_code = 503
             return attResp
-        return 1
+        return resp
 
 if(__name__ == "__main__"):
     # Create logger
