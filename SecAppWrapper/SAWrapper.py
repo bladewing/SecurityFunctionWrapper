@@ -1,8 +1,10 @@
-import netifaces, time
+# external Libs
+import netifaces
 from SecAppWrapper import ApiURI
+# Standard Libs
 from urllib.request import Request, urlopen
 import urllib.error, logging
-import json
+import json, time
 
 # TODO: implement /unregister
 # TODO: to implement /unregister daemonize the script.

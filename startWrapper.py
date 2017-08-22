@@ -16,21 +16,23 @@ def main(argv):
     controllerURL = None
     iface = "default"
     try:
-        opts, args = getopt.getopt(argv, "vhg:u:i:", ["group=", "url=", "iface="])
+        opts, args = getopt.getopt(argv, "vhg:u:i:", ["group=", "url=", "iface=", "verbose="])
     except getopt.GetoptError:
-        print("startWrapper.py -g groupname -u controllerURL (-i interface)")
-        print("startWrapper.py --group groupname --url controllerURL (--iface interface)")
+        print("Usage:\tstartWrapper.py -g groupname -u controllerURL [-i interface] [-v]")
+        print("\tstartWrapper.py --group groupname --url controllerURL [--iface interface] [--verbose]")
         sys.exit(0)
     if (len(argv) == 4):
         print("Using default interface.")
     for opt, arg in opts:
-        if(opt == '-v'):
+        if(opt in ("-v","--verbose")):
             ch = logging.StreamHandler()
             ch.setLevel(logging.INFO)
             ch.setFormatter(formatter)
             logger.addHandler(ch)
         if(opt == '-h'):
-            print("startWrapper.py -group groupname -url controllerURL -iface interface")
+            print("Usage:\tstartWrapper.py -g groupname -u controllerURL [-i interface] [-v]")
+            print("\tstartWrapper.py --group groupname --url controllerURL [--iface interface] [--verbose]")
+            sys.exit(0)
         elif(opt in ("-g", "--group")):
             group = arg
         elif(opt in ("-u", "--url")):
@@ -46,8 +48,7 @@ def main(argv):
         elif(opt in ("-i", "--iface")):
             iface = arg
     if(group == None or controllerURL == None):
-        print("Usage: startWrapper.py -g groupname -u controllerURL (-i interface)")
-        print("Optional: startWrapper.py --group groupname --url controllerURL (--iface interface)")
+        print("startWrapper.py\t---- illegal options.\nSee startWrapper.py -h for help")
         sys.exit(0)
     #print("Starting Wrapper Instance with following parameters: {0}, {1}, {2}".format(group, controllerURL, saIface))
     wrapperInstance = SAWrapper.Wrapper(group, controllerURL, iface)
