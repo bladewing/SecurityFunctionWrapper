@@ -51,7 +51,7 @@ def main(argv):
         print("startWrapper.py\t---- illegal options.\nSee startWrapper.py -h for help")
         sys.exit(0)
     #print("Starting Wrapper Instance with following parameters: {0}, {1}, {2}".format(group, controllerURL, saIface))
-    wrapperInstance = SAWrapper.Wrapper(group, controllerURL, iface)
+    wrapperInstance = SAWrapper.Wrapper(str(group), str(controllerURL), str(iface))
     thread1 = threading.Thread(target=wrapperInstance.keepalive)
     thread1.setDaemon(True)
     thread1.start()

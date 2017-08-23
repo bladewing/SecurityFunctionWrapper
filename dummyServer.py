@@ -5,12 +5,13 @@ app = Flask(__name__)
 
 @app.route('/')
 def home():
-    return 1
+    return "Coming soon."
 
 @app.route('/register', methods=['POST'])
 def register():
-    resp = jsonify({"instanceID": 'fw-1'})
-    resp.status_code = 200
+    data = {"instanceID": "fw-1"}
+    jsonData = json.dumps(data)
+    resp = make_response(jsonData, 200)
     return resp
 
 @app.route('/keep-alive', methods=['POST'])

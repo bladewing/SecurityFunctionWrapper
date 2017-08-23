@@ -24,7 +24,7 @@ class Wrapper():
                 self.iface = saIface
             self.iface_mac = netifaces.ifaddresses('{0}'.format(self.iface))[netifaces.AF_LINK][0]['addr']
             self.logger.info("[INIT] Aquired HW_ADDR for interface {0}: {1}".format(self.iface, self.iface_mac))
-            self.logger.info("[INIT] Sending Register Request to Controller...")
+            self.logger.info("[INIT] Sending Register Request to Controller... ", str(self.iface_mac))
             connected = False
             # { "type": "REGISTER", "group": "saGroup", "hw_addr": "mac-address", "token": "secureToken", "misc": "misc info" }
             data = {'type': ApiURI.Type.REGISTER.name, 'group': self.group, 'hw_addr': self.iface_mac, 'token': '', 'misc': ''}
@@ -35,7 +35,7 @@ class Wrapper():
                     resp = urlopen(conn)
                     if(resp.getcode() == 200):
                         self.logger.info("[INIT] Connection successful")
-                        respData = json.loads(resp.read())
+                        respData = json.loads(resp.read().decode("utf-8"))
                         self.instanceID = respData['instanceID']
                         connected = True
                         self.ready = True
