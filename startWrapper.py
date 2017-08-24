@@ -6,7 +6,7 @@ import requests
 
 # Standard Libs
 from urllib.request import urlopen, Request
-import sys, getopt, threading, logging
+import sys, getopt, threading, logging, signal
 
 app = Flask(__name__)
 wrapperInstance = None
@@ -67,8 +67,12 @@ def main(argv):
             logger.info("[Attack] Incoming report from Security Appliance {0}".format(wrapperInstance.instanceID))
             # Report Data Structure:
             # { "rate": "20", "misc": "information (???)"}
-            reportData = request.get_json()
-            print(reportData)
+            try:
+                reportData = request.get_json()
+                print(reportData)
+            except TypeError:
+                print("haha")
+                sys.exit(0)
             # Attack Data Structure
             # {"type": "ATTACK", "name": "Firewall -1", "group": "firewall", "hw_addr": "00:00:00:00:00:01", "rate": "20",
             #  "token": "secure -token", "misc": "information" }
@@ -101,7 +105,13 @@ def main(argv):
             return attResp
         return resp
 
+def sigterm_handler(signal, frame):
+    # Send unregister here!
+    print("Got SIGTERM. Bye cruel world...")
+    sys.exit(0)
+
 if(__name__ == "__main__"):
+    signal.signal(signal.SIGTERM, sigterm_handler)
     # Create logger
     logger = logging.getLogger('SecAppWrapper')
     logger.setLevel(logging.INFO)
