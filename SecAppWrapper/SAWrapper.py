@@ -62,7 +62,7 @@ class Wrapper():
                       'token': '', 'misc': ''}
             jsonKaData = json.dumps(kaData)
             while (self.ready):
-                self.logger.info("[KeepAlive] Waiting {0} seconds...".format(self.regTimeout))
+                self.logger.info("[KeepAlive] Waiting {0} seconds...".format(str(self.regTimeout)))
                 time.sleep(self.regTimeout)
                 self.logger.info("[KeepAlive] Initializing connection to Controller...")
                 kaConn = Request(self.controllerURL + ApiURI.Type.KEEPALIVE.value,

@@ -51,7 +51,7 @@ def main(argv):
         print("startWrapper.py\t---- illegal options.\nSee startWrapper.py -h for help")
         sys.exit(0)
     #print("Starting Wrapper Instance with following parameters: {0}, {1}, {2}".format(group, controllerURL, saIface))
-    wrapperInstance = SAWrapper.Wrapper(str(group), str(controllerURL), str(iface))
+    wrapperInstance = SAWrapper.Wrapper(group, controllerURL, iface)
     thread1 = threading.Thread(target=wrapperInstance.keepalive)
     thread1.setDaemon(True)
     thread1.start()
@@ -64,7 +64,7 @@ def main(argv):
         logger.info("[Attack] Wrapper ready, preparing data...") if wrapperInstance.ready else logger.warning("[Attack] Wrapper Instance not ready! Can't handle attacks from /attack")
         resp = make_response("Lol")
         if (wrapperInstance.ready):
-            logger.info("[Attack] Incoming report from Security Appliance {0}".format(wrapperInstance.instanceID))
+            logger.info("[Attack] Incoming report from Security Appliance {0}".format(str(wrapperInstance.instanceID)))
             # Report Data Structure:
             # { "rate": "20", "misc": "information (???)"}
             try:
