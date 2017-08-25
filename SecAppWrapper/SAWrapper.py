@@ -66,6 +66,7 @@ class Wrapper():
                 self.logger.info("[INIT] Wrapper Instance is ready!")
 
         def keepalive(self):
+            # TODO: check own token for expiration
             kaData = {'type': ApiURI.Type.KEEPALIVE.name, 'name': self.instanceID,
                       'group': self.group, 'hw_addr': self.iface_mac, 'misc': ''}
             jsonKaData = json.dumps(kaData)
