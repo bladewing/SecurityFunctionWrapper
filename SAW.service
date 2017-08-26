@@ -3,8 +3,7 @@ Description=Security Appliance Wrapper
 
 [Service]
 Type=forking
-EnvironmentFile=/usr/local/bin/SecAppWrapper/.argconf
-ExecStart=/usr/local/bin/SecAppWrapper/startWrapper.py $ARG1 $ARG2 $ARG3
+ExecStart=/usr/local/bin/SecAppWrapper/startWrapper.py &
 
 [Install]
 WantedBy=multi-user.target

@@ -6,13 +6,10 @@ from urllib.request import Request, urlopen
 import urllib.error, logging
 import json, time
 
-# TODO: implement /unregister
-# TODO: to implement /unregister daemonize the script.
-
 class Wrapper():
-        regTimeout = 5 # add to Argument list of constructor/init?
-        secret = "5566F08A9218BEAF6E6714B5870161CBD12A975F6E516FAD66D28FE56302930D"
-        def __init__(self, saGroup, saControllerURL, saIface):
+        regTimeout = None # add to Argument list of constructor/init?
+        secret = None
+        def __init__(self, saGroup, saControllerURL, saIface, secret, timeout):
             self.logger = logging.getLogger('SecAppWrapper.SAWrapper')
             self.logger.info("[INIT] Initiating new Wrapper Instance")
             self.group = saGroup
@@ -20,6 +17,8 @@ class Wrapper():
             self.ready = False
             self.instanceID = None
             self.token = None
+            Wrapper.secret = secret
+            Wrapper.regTimeout = timeout
             if(saIface == "default"):
                 self.iface = netifaces.gateways()['default'][netifaces.AF_INET][1]
             else:
@@ -31,9 +30,7 @@ class Wrapper():
             # { "type": "REGISTER", "group": "saGroup", "hw_addr": "mac-address", "token": "secureToken", "misc": "misc info" }
             data = {'type': ApiURI.Type.REGISTER.name, 'group': self.group, 'hw_addr': self.iface_mac, 'misc': '', 'exp': int(time.time()+5*60)}
             regToken = jwt.encode(data, Wrapper.secret, algorithm='HS256')
-            self.logger.info("[INIT] JWT generated: %s", str(regToken.decode("utf-8")))
             regTokenJ = {"token": regToken.decode("utf-8")}
-            self.logger.info("[INIT] regTokenJ: %s", regTokenJ)
             jsonData = json.dumps(regTokenJ)
             while(connected == False):
                 conn = Request(self.controllerURL+ApiURI.Type.REGISTER.value, jsonData.encode("utf-8"), {'Content-Type': 'application/json'})
@@ -43,7 +40,6 @@ class Wrapper():
                         self.logger.info("[INIT] Connection successful")
                         respData = json.loads(resp.read().decode("utf-8"))
                         payload = jwt.decode(respData["token"], Wrapper.secret, algorithms=['HS256'])
-                        print(payload)
                         self.instanceID = payload['instanceID']
                         self.token = respData["token"]
                         connected = True
@@ -71,7 +67,6 @@ class Wrapper():
                       'group': self.group, 'hw_addr': self.iface_mac, 'misc': ''}
             jsonKaData = json.dumps(kaData)
             while (self.ready):
-                if(self.ready == False): break
                 self.logger.info("[KeepAlive] Waiting {0} seconds...".format(str(self.regTimeout)))
                 time.sleep(self.regTimeout)
                 self.logger.info("[KeepAlive] Initializing connection to Controller...")
@@ -92,5 +87,4 @@ class Wrapper():
                     self.logger.warning("[KeepAlive] Failed to send keep-alive")
                     # TODO what then?
                     break
-            if(self.ready == False): print("Thank you...")
             return 1
