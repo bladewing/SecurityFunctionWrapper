@@ -12,6 +12,8 @@ echo "Copy done!"
 
 echo "Installing service..."
 sudo cp SAW.service /etc/systemd/user/
+sudo touch /var/log/SecAppWrapper.log
+sudo chmod 777 /var/log/SecAppWrapper.log
 
 echo "enabling SAW.service!"
 systemctl --user enable SAW.service
