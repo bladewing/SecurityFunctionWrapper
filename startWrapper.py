@@ -133,7 +133,9 @@ def main(argv):
         return "ok"
 
 def sigterm_handler(signal, frame):
-    logger.info("[SIGTERM DELETE] SIGTERM Signal catched. Preparing shutdown...")
+    logger.info("[SIGTERM DELETE] SIGTERM Signal catched. Shutting down keep-alive thread...")
+    main.wrapperInstance.ready = False
+    main.thread1.join()
     # Send unregister here!
     # Payload: {"type": "DELETE", "name": "instanceID", "misc": "misc info"}
     payload = {'type': ApiURI.Type.DELETE.name, 'name': str(main.wrapperInstance.instanceID), 'misc':''}
@@ -145,8 +147,8 @@ def sigterm_handler(signal, frame):
     delResp = urlopen(delConn)
     if(delResp.getcode() == 200):
         logger.info("[SIGTERM DELETE] Delete Message sent successfully. Shutting down keep-alive thread...")
-        main.wrapperInstance.ready = False
-        main.thread1.join()
+    else:
+        logger.error("[SIGTERM DELETE] Sending Delete request failed with Code:%s", delResp.getcode())
     logger.info("[SIGTERM DELETE] Bye.")
     sys.exit(0)
 
