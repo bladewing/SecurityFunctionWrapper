@@ -2,8 +2,9 @@
 Description=Security Appliance Wrapper
 
 [Service]
-Type=forking
-ExecStart=/usr/local/bin/SecAppWrapper/startWrapper.py &
+Type=simple
+ExecStart=/usr/bin/python3 /home/eddy/.local/bin/SecAppWrapper/startWrapper.py
+TimeoutSec=15
 
 [Install]
 WantedBy=multi-user.target

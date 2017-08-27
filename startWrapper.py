@@ -6,13 +6,14 @@ import requests, jwt
 
 # Standard Libs
 from urllib.request import urlopen, Request
-import sys, getopt, threading, logging, signal, configparser
+import sys, getopt, threading, logging, signal, configparser, os
 
 app = Flask(__name__)
 wrapperInstance = None
 # Initialize and load config.
 config = configparser.ConfigParser()
-config.read('wrapper.ini')
+config_file = os.path.join(os.path.dirname(__file__), 'wrapper.ini')
+config.read(config_file)
 if(not config["GENERAL"]["port"]):
     print("Port missing in Config file!")
     sys.exit(0)
@@ -159,7 +160,8 @@ if(__name__ == "__main__"):
     logger = logging.getLogger('SecAppWrapper')
     logger.setLevel(logging.INFO)
     # Create FileHandler to save logs in File.
-    fh = logging.FileHandler('startWrapper.log')
+    log_file = '/var/log/SecAppWrapper.log'
+    fh = logging.FileHandler(log_file)
     # Format logger
     formatter = logging.Formatter('%(asctime)s <%(name)s> - <%(levelname)s> : %(message)s')
     fh.setFormatter(formatter)

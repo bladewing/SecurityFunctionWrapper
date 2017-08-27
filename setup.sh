@@ -1,18 +1,20 @@
 #!/bin/bash
 
+DIR=/home/eddy/.local/bin/
+
 echo "Installing Security Appliance Wrapper!"
 echo "Copy to user binary directory..."
-mkdir /usr/local/bin/SecAppWrapper
-cp SecAppWrapper /usr/local/bin/SecAppWrapper/
-cp startWrapper.py /usr/local/bin/SecAppWrapper/
-
+mkdir $DIR/SecAppWrapper
+cp SecAppWrapper $DIR/SecAppWrapper/
+cp startWrapper.py $DIR/SecAppWrapper/
+cp wrapper.ini $DIR/SecAppWrapper/
 echo "Copy done!"
 
 echo "Installing service..."
-cp SAW.service /etc/systemd/system/
+cp SAW.service /etc/systemd/user/
 
 echo "enabling SAW.service!"
-systemctl enable SAW.service
+systemctl --user enable SAW.service
 echo "starting service..."
-service SAW start
+systemctl --user start SAW.service
 echo "succesfully started!"
