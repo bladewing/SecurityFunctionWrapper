@@ -1,5 +1,5 @@
 # external Libs
-import netifaces, jwt
+import netifaces, jwt, requests
 from SecAppWrapper import ApiURI
 # Standard Libs
 from urllib.request import Request, urlopen
@@ -71,6 +71,12 @@ class Wrapper():
                       'group': self.group, 'hw_addr': self.iface_mac, 'misc': ''}
             jsonKaData = json.dumps(kaData)
             while (self.ready):
+                # Check if Controller is online:
+                try:
+                    checkCTRL = requests.head(self.controllerURL + ApiURI.Type.KEEPALIVE.value)
+                except requests.exceptions.ConnectionError as e:
+                    self.logger.warning("[KeepAlive] Controller not available. Retrying...")
+                    continue
                 self.logger.info("[KeepAlive] Waiting {0} seconds...".format(str(self.regTimeout)))
                 time.sleep(self.regTimeout)
                 self.logger.info("[KeepAlive] Initializing connection to Controller...")
