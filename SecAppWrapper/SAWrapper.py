@@ -88,7 +88,6 @@ class Wrapper():
                     kaResp.close()
                     continue
                 else:
-                    self.logger.warning("[KeepAlive] Failed to send keep-alive")
-                    # TODO what then?
-                    break
+                    self.logger.warning("[KeepAlive] Failed to send keep-alive. Is Controller down? Retrying...")
+                    continue
             return 1
