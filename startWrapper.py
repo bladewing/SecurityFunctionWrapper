@@ -136,6 +136,7 @@ def sigterm_handler(signal, frame):
     logger.info("[SIGTERM DELETE] SIGTERM Signal catched. Shutting down keep-alive thread...")
     main.wrapperInstance.ready = False
     main.thread1.join()
+    logger.info("[SIGTERM DELETE] Keep-alive thread successfully shut down. Sending Delete Request...")
     # Send unregister here!
     # Payload: {"type": "DELETE", "name": "instanceID", "misc": "misc info"}
     payload = {'type': ApiURI.Type.DELETE.name, 'name': str(main.wrapperInstance.instanceID), 'misc':''}
