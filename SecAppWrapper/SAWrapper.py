@@ -83,6 +83,9 @@ class Wrapper():
                 except urllib.error.URLError as e:
                     self.logger.warning("[KeepAlive] Controller not available, retrying...")
                     continue
+                except http.client.RemoteDisconnected as e:
+                    self.logger.warning("[KeepAlive] Controller not available, retrying...")
+                    continue
                 if (kaResp.getcode() == 200):
                     self.logger.info("[KeepAlive] Keep-Alive successfully send! Closing conenction...")
                     respData = json.loads(kaResp.read().decode("utf-8"))
@@ -92,6 +95,12 @@ class Wrapper():
                     self.logger.warning("[KeepAlive] Controller not available, retrying...")
                     kaResp.close()
                     continue
+                elif (kaResp.getcode() == 401):
+                    self.logger.warning("[KeepAlive] Got 'Unauthorized'...")
+                    respData = json.loads(kaResp.read().decode("utf-8"))
+                    if(respData["code"] == "token_expired"):
+                        self.logger.warning("[KeepAlive] Token expired.")
+                        continue
                 else:
                     self.logger.warning("[KeepAlive] Failed to send keep-alive. Is Controller down? Retrying...")
                     continue
