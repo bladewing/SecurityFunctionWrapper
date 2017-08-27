@@ -24,4 +24,14 @@ After all prerequisites are installed, modify the config-file *wrapper.ini*. The
 
 `python3 startWrapper.py`
 
+For debugging purposes and enabling verbose see
+
+`python3 startWrapper.py -h`
+
+for usage.
+
 **Note:** The Controller must be running before starting the Wrapper!
+
+# TODO:
+
+-- Add Wrapper as a service.
