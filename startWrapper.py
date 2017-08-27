@@ -36,14 +36,13 @@ def main(argv):
         try:
             r = requests.head(main.controllerURL)
         except requests.exceptions.InvalidURL:
-            print("Invalid URL. Check Configuration File!")
+            logger.error("[MAIN] Invalid URL. Check Configuration File!")
             sys.exit(0)
         except:
-            print("Server not available. Check URL in Config File!")
+            logger.error("[MAIN] Server not available. Check URL in Config File!")
             sys.exit(0)
         if(not main.group or not main.controllerURL):
-            print("Missing Arguments in configuration file.\nCheck Configuration or start with parameters!")
-            print("See startWrapper.py -h")
+            logger.warning("[MAIN] Missing Arguments in configuration file.\nCheck Configuration or start with parameters!\n See startWrapper.py -h")
             sys.exit(0)
     else:
         if(not main.secret):
@@ -57,7 +56,7 @@ def main(argv):
             print("\tstartWrapper.py --group groupname --url controllerURL [--iface interface] [--verbose]")
             sys.exit(0)
         if (len(argv) == 4):
-            print("Using default interface.")
+            logger.info("[MAIN] Using default interface.")
         for opt, arg in opts:
             if(opt in ("-v","--verbose")):
                 ch = logging.StreamHandler()
@@ -75,10 +74,10 @@ def main(argv):
                     r = requests.head(arg)
                     main.controllerURL = arg
                 except requests.exceptions.InvalidURL:
-                    print("Invalid URL.")
+                    logger.error("[MAIN] Invalid URL.")
                     sys.exit(0)
                 except:
-                    print("Server not available. Check URL: ", arg)
+                    logger.error("[MAIN] Server not available. Check URL: ", arg)
                     sys.exit(0)
             elif(opt in ("-i", "--iface")):
                 main.iface = arg
@@ -173,5 +172,5 @@ if(__name__ == "__main__"):
     try:
         app.run(debug=False, host='0.0.0.0', port=int(config["GENERAL"]["port"]))
     except OSError as e:
-        print("Port already in use! Change port in config!")
+        logger.info("[MAIN FLASK] Port already in use! Change port in config!")
         sys.exit(0)
