@@ -49,6 +49,10 @@ class Wrapper():
                         # HTTP Code 208: Already Reported.
                         # Here: Already registered
                         self.logger.info("[INIT] Instance already registered. Carry on!")
+                        respData = json.loads(resp.read().decode("utf-8"))
+                        payload = jwt.decode(respData["token"], Wrapper.secret, algorithms=['HS256'])
+                        self.instanceID = payload['instanceID']
+                        self.token = respData["token"]
                         connected = True
                         self.ready = True
                         resp.close()
