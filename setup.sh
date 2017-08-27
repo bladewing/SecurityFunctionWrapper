@@ -1,5 +1,14 @@
 #!/bin/bash
 
+echo -n "Did you configure the wrapper.ini File? [y/n]"
+read answer
+if echo "$answer" | grep -iq "^y" ;then
+    echo "Good, continuing..."
+else
+    echo "Start setup.sh after configuring wrapper.ini!"
+    exit
+fi
+
 DIR=/home/eddy/.local/bin
 
 echo "Installing Security Appliance Wrapper!"
