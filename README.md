@@ -6,11 +6,17 @@ Wrapper running on Security Appliance to communicate with the Function Chaining 
 The Wrapper is written in **_Python3_**.
 These Python Packages need to be installed with pip3:
 
-*flask, requests, jwt (PyJWT)*
+*flask, requests, jwt (PyJWT), netifaces*
 
 To install pip3 use following command:
 
 `sudo apt-get install python3-pip`
+
+Finally use pip3 to install the packages:
+
+`sudo pip3 install flask requests netifaces PyJWT`
+
+**Note:** Installing *netifaces* requires sudo.
 
 ## Quickstart
 
