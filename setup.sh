@@ -1,5 +1,11 @@
 #!/bin/bash
 
+if [ $(whoami) = "root" ]
+then
+    echo "Do not install with root access."
+    exit
+fi
+
 echo -n "Did you configure the wrapper.ini File? [y/n]"
 read answer
 if echo "$answer" | grep -iq "^y" ;then
@@ -9,7 +15,7 @@ else
     exit
 fi
 
-DIR=/home/eddy/.local/bin
+DIR=/home/$(whoami)/.local/bin
 
 echo "Installing Security Appliance Wrapper!"
 echo "Copy to user binary directory..."
@@ -28,4 +34,5 @@ echo "enabling SAW.service!"
 systemctl --user enable SAW.service
 echo "starting service..."
 systemctl --user start SAW.service
-echo "succesfully started!"
+echo "Check systemctl --user status SAW.service to see if everything went well."
+echo "If something went wrong, check /var/log/SecAppWrapper.log!"
