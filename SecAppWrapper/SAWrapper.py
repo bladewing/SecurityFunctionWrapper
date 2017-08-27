@@ -71,19 +71,18 @@ class Wrapper():
                       'group': self.group, 'hw_addr': self.iface_mac, 'misc': ''}
             jsonKaData = json.dumps(kaData)
             while (self.ready):
-                # Check if Controller is online:
-                try:
-                    checkCTRL = requests.head(self.controllerURL + ApiURI.Type.KEEPALIVE.value)
-                except requests.exceptions.ConnectionError as e:
-                    self.logger.warning("[KeepAlive] Controller not available. Retrying...")
-                    continue
                 self.logger.info("[KeepAlive] Waiting {0} seconds...".format(str(self.regTimeout)))
                 time.sleep(self.regTimeout)
                 self.logger.info("[KeepAlive] Initializing connection to Controller...")
                 kaConn = Request(self.controllerURL + ApiURI.Type.KEEPALIVE.value,
                                  jsonKaData.encode("utf-8"),
                                  {'Content-Type': 'application/json', 'Authorization': "Bearer {0}".format(self.token)})
-                kaResp = urlopen(kaConn)
+                # Check if controller is online:
+                try:
+                    kaResp = urlopen(kaConn)
+                except urllib.error.URLError as e:
+                    self.logger.warning("[KeepAlive] Controller not available, retrying...")
+                    continue
                 if (kaResp.getcode() == 200):
                     self.logger.info("[KeepAlive] Keep-Alive successfully send! Closing conenction...")
                     respData = json.loads(kaResp.read().decode("utf-8"))
