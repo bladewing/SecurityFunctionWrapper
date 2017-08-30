@@ -9,7 +9,7 @@ def home():
 
 @app.route('/register', methods=['POST'])
 def register():
-    data = {"instanceID": "fw-1"}
+    data = {"instance_id": "fw-1"}
     jsonData = json.dumps(data)
     resp = make_response(jsonData, 200)
     return resp

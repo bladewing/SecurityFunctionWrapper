@@ -22,11 +22,11 @@ Finally use pip3 to install the packages:
 
 After all prerequisites are installed, modify the config-file *wrapper.ini*. Then simply start the Wrapper with
 
-`python3 startWrapper.py`
+`python3 start_wrapper.py`
 
 For debugging purposes and enabling verbose see
 
-`python3 startWrapper.py -h`
+`python3 start_wrapper.py -h`
 
 for usage.
 
