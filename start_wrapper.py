@@ -32,28 +32,28 @@ def main(argv):
     :return:
     """
     main.group = None
-    main.controllerURL = None
+    main.controller_url = None
     main.iface = None
     main.secret = CONFIG["Wrapper"]["secret"]
     main.timeout = int(CONFIG["Wrapper"]["timeout"]) if CONFIG["Wrapper"]["timeout"] else False
     if not argv:
         LOGGER.info("[MAIN] No parameter detected. Loading from CONFIG file...")
         main.group = CONFIG["GENERAL"]["group"]
-        main.controllerURL = CONFIG["GENERAL"]["controller_url"]
+        main.controller_url = CONFIG["GENERAL"]["controller_url"]
         main.iface = CONFIG["GENERAL"]["iface"]
         if not main.secret:
             raise ImportWarning("Configuration invalid. Secret missing.")
         if not main.timeout:
             raise ImportWarning("Configuration invalid. Timeout missing.")
         try:
-            requests.head(main.controllerURL)
+            requests.head(main.controller_url)
         except requests.exceptions.InvalidURL:
             LOGGER.error("[MAIN] Invalid URL. Check Configuration File!")
             sys.exit(0)
         except:
             LOGGER.error("[MAIN] Server not available. Check URL in Config File!")
             sys.exit(0)
-        if not main.group or not main.controllerURL:
+        if not main.group or not main.controller_url:
             LOGGER.warning(
                 "[MAIN] Missing Arguments in configuration file.\nCheck Configuration or start "
                 "with parameters!\n See start_wrapper.py -h")
@@ -88,7 +88,7 @@ def main(argv):
             elif opt in ("-u", "--url"):
                 try:
                     requests.head(arg)
-                    main.controllerURL = arg
+                    main.controller_url = arg
                 except requests.exceptions.InvalidURL:
                     LOGGER.error("[MAIN] Invalid URL.")
                     sys.exit(0)
@@ -97,13 +97,13 @@ def main(argv):
                     sys.exit(0)
             elif opt in ("-i", "--iface"):
                 main.iface = arg
-        if main.group is None or main.controllerURL is None:
+        if main.group is None or main.controller_url is None:
             print("start_wrapper.py\t---- illegal options.\nSee start_wrapper.py -h for help")
             print("or configuration file is invalid. Check General Section of CONFIG file.")
             sys.exit(0)
     # print("Starting Wrapper Instance with following parameters: {0}, {1}, {2}".format(group,
     # controller_url, saIface))
-    main.wrapper_instance = SAWrapper.Wrapper(main.group, main.controllerURL, main.iface,
+    main.wrapper_instance = SAWrapper.Wrapper(main.group, main.controller_url, main.iface,
                                               main.secret, main.timeout)
     main.thread1 = threading.Thread(target=main.wrapper_instance.keepalive)
     main.thread1.setDaemon(True)

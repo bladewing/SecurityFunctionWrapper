@@ -88,15 +88,23 @@ class Wrapper:
         ka_data = {'type': ApiURI.Type.KEEPALIVE.name, 'name': self.instance_id,
                    'group': self.group, 'hw_addr': self.iface_mac, 'misc': ''}
         json_ka_data = json.dumps(ka_data)
+        split_count = 0
+        max_splits = self.reg_timeout / 10
+        self.logger.info("[KeepAlive] Waiting %s minutes...", self.reg_timeout/60)
         while self.ready:
-            self.logger.info("[KeepAlive] Waiting %s seconds...", self.reg_timeout)
-            time.sleep(self.reg_timeout)
+            if split_count < max_splits:
+                #current_wait = self.reg_timeout - (split_count*10)
+                split_count += 1
+                #self.logger.info("[KeepAlive] Waiting %s seconds...", current_wait)
+                time.sleep(10)
+                continue
             self.logger.info("[KeepAlive] Initializing connection to Controller...")
             ka_conn = Request(self.controller_url + ApiURI.Type.KEEPALIVE.value,
                               json_ka_data.encode("utf-8"),
                               {'Content-Type': 'application/json',
                                'Authorization': "Bearer {0}".format(self.token)})
             # Check if controller is online:
+            split_count = 0
             try:
                 ka_resp = urlopen(ka_conn)
             except urllib.error.URLError:
