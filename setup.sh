@@ -15,7 +15,7 @@ else
     exit
 fi
 
-DIR=/home/$(whoami)/.local/bin
+DIR=/home/$(whoami)/bin
 
 echo "Installing Security Appliance Wrapper!"
 echo "Copy to user binary directory..."
