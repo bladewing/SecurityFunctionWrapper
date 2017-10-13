@@ -123,7 +123,9 @@ def main(argv):
             LOGGER.info("[Attack] Incoming report from Security Appliance")
             # Report Data Structure:
             # { "rate": "20", "misc": "information (???)"}
+            print(request.get_json())
             report_data = request.get_json()
+            print(report_data)
             # Attack Data Structure {"type": "ATTACK", "name": "Firewall -1", "group":
             # "firewall", "hw_addr": "00:00:00:00:00:01", "rate": "20", "misc": "information" }
             LOGGER.info("[Attack] Preparing attack alert to Controller.")
@@ -172,7 +174,7 @@ def sigterm_handler(sig, frame):
     payload = {'type': ApiURI.Type.DELETE.name, 'name': str(main.wrapper_instance.instance_id),
                'misc': ''}
     json_payload = json.dumps(payload)
-    del_conn = Request(main.controllerURL + ApiURI.Type.DELETE.value, json_payload.encode("utf-8"),
+    del_conn = Request(main.controller_url + ApiURI.Type.DELETE.value, json_payload.encode("utf-8"),
                        {'Content-Type': 'application/json',
                         'Authorization': "Bearer {0}".format(main.wrapper_instance.token)})
     LOGGER.info("[SIGTERM DELETE] Payload prepared. Connecting...")
