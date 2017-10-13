@@ -38,7 +38,7 @@ After all prerequisites are installed, start the *setup.sh* as user.
 
 `chmod +x setup.sh && sudo ./setup.sh`
 
-**Note:** This will copy all files to /home/USER/.local/bin. Installing with root not recommended.
+**Note:** This will copy all files to /home/USER/bin. Installing with root not recommended.
 
 **Note:** `sudo` is needed to copy the *.service* File to the /etc/systemd/user directory.
 
