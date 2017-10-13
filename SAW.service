@@ -3,7 +3,7 @@ Description=Security Appliance Wrapper
 
 [Service]
 Type=simple
-ExecStart=/usr/bin/python3 /home/eddy/.local/bin/SecAppWrapper/start_wrapper.py
+ExecStart=/usr/bin/python3 /home/vmadmin/.local/bin/SecAppWrapper/start_wrapper.py
 TimeoutSec=15
 
 [Install]
