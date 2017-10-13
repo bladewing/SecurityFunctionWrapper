@@ -9,7 +9,7 @@ else
     exit
 fi
 
-DIR=/home/eddy/.local/bin
+DIR=/home/vmadmin/bin
 
 systemctl --user stop SAW.service
 systemctl --user disable SAW.service
