@@ -14,7 +14,7 @@ data = json.dumps(template)
 i = 0
 count = 1
 while count <=2:
-    p = p[count]
+    p = p1[count]
     while True:
         n = numpy.random.exponential(scale=1.0, size=1)
         if time.time() > TIMEOUT:
