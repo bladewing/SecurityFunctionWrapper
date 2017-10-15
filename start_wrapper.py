@@ -125,7 +125,6 @@ def main(argv):
             # { "rate": "20", "misc": "information (???)"}
             print(request.get_json())
             report_data = request.get_json()
-            print(report_data)
             # Attack Data Structure {"type": "ATTACK", "name": "Firewall -1", "group":
             # "firewall", "hw_addr": "00:00:00:00:00:01", "rate": "20", "misc": "information" }
             LOGGER.info("[Attack] Preparing attack alert to Controller.")

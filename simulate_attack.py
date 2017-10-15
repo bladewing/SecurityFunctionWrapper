@@ -1,16 +1,19 @@
 """
 Simulate attacks with exponential distribution function.
 """
-import numpy, time, math
+import numpy, time, math, json
+from flask import Request
+from urllib.request import urlopen
 
 NOTIFY_URL="http://localhost:5001/attack"
-
+p=1/100
 ones = 0
 zeros = 0
 print("Calculating n...")
 n = numpy.random.exponential(scale=1.0, size=10**6)
-TIMEOUT = time.time() + 10
-
+TIMEOUT = time.time() + 600
+template = {"rate":"1", "misc":""}
+data = json.dumps(template)
 i = 0
 while True:
     if time.time() > TIMEOUT:
@@ -20,7 +23,9 @@ while True:
         break
     elif i >= len(n):
         i = 0
-    elif n[i] < math.log(3/2):
+    elif n[i] < math.log(1/(1-p)):
+        conn = Request(NOTIFY_URL,data.encode('utf-8'), {'Content-Type': 'application/json'})
+        resp = urlopen(conn)
         ones += 1
     else:
         zeros += 1
