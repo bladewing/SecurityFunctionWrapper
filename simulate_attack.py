@@ -2,8 +2,7 @@
 Simulate attacks with exponential distribution function.
 """
 import numpy, time, math, json
-from flask import Request
-from urllib.request import urlopen
+from urllib.request import urlopen, Request
 
 NOTIFY_URL="http://localhost:5001/attack"
 p=1/100
