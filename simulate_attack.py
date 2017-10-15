@@ -5,7 +5,7 @@ import numpy, time, math, json
 from urllib.request import urlopen, Request
 
 NOTIFY_URL="http://localhost:5001/attack"
-p1=[1/100500,2/100500,3/100500]
+prob=[1/100500,2/100500,3/100500]
 ones = 0
 zeros = 0
 TIMEOUT = time.time() + 600
@@ -14,7 +14,7 @@ data = json.dumps(template)
 i = 0
 count = 1
 while count <=2:
-    p = p1[count]
+    p = prob[count]
     while True:
         n = numpy.random.exponential(scale=1.0, size=1)
         if time.time() > TIMEOUT:
