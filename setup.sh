@@ -16,6 +16,7 @@ if [ "$1" != "-y" ] && [ "$2" != "-y" ]; then
     fi
 fi
 
+mkdir /home/$(whoami)/bin
 DIR=/home/$(whoami)/bin
 
 echo "Installing Security Appliance Wrapper!"
