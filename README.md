@@ -36,7 +36,7 @@ for usage.
 
 After all prerequisites are installed, start the *setup.sh* as user.
 
-`chmod +x setup.sh && sudo ./setup.sh`
+`chmod +x setup.sh && ./setup.sh`
 
 **Note:** This will copy all files to /home/USER/bin. Installing with root not recommended.
 
@@ -57,6 +57,12 @@ Stopping the service:
 And restarting the service:
 
 `systemctl --user restart SAW.service`
+
+**Install options:**
+
+If your run `./setup.sh` from a script you want to pass `-y` as a parameter to skip all dialogs.
+
+If you don't want to install the FCC.service file you can skip it using the `--nosystemd` parameter.
 
 ## Uninstall
 
