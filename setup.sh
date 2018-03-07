@@ -27,7 +27,9 @@ cp start_wrapper.py $DIR/SecAppWrapper/
 cp wrapper.ini $DIR/SecAppWrapper/
 echo "Copy done!"
 
-touch /var/log/SecAppWrapper.log
+LOG_FILE='/var/log/SecAppWrapper.log'
+echo "Creating log file: "$LOG_FILE
+touch $LOG_FILE
 
 if [ "$1" != "--nosystemd" ] && [ "$2" != "--nosystemd" ]; then
     echo "Installing service..."
