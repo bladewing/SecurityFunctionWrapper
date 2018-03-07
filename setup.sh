@@ -29,7 +29,8 @@ echo "Copy done!"
 
 LOG_FILE='/var/log/SecAppWrapper.log'
 echo "Creating log file: "$LOG_FILE
-touch $LOG_FILE
+sudo touch $LOG_FILE
+sudo chown $(whoami):$(whoami) $LOG_FILE
 
 if [ "$1" != "--nosystemd" ] && [ "$2" != "--nosystemd" ]; then
     echo "Installing service..."
