@@ -20,7 +20,7 @@ Finally use pip3 to install the packages:
 
 ## Quickstart
 
-After all prerequisites are installed, modify the config-file *wrapper.ini*. Then simply start the Wrapper with
+After all prerequisites are installed, modify the config-file *wrapper.ini* and copy it to the home directory. Then simply start the Wrapper with
 
 `python3 start_wrapper.py`
 
