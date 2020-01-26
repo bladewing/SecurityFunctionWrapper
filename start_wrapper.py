@@ -9,6 +9,7 @@ import logging
 import os
 import requests
 from flask import Flask, json, make_response, request
+from pathlib import Path
 
 from SecAppWrapper import ApiURI, SAWrapper
 
@@ -16,7 +17,7 @@ APP = Flask(__name__)
 WRAPPER_INSTANCE = None
 # Initialize and load CONFIG.
 CONFIG = configparser.ConfigParser()
-CONFIG_FILE = os.path.join(os.path.dirname(__file__), 'wrapper.ini')
+CONFIG_FILE = os.path.join(Path.home(), 'wrapper.ini')
 CONFIG.read(CONFIG_FILE)
 if not CONFIG["GENERAL"]["port"]:
     print("Port missing in Config file!")
