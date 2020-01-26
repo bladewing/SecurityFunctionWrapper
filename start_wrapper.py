@@ -194,7 +194,7 @@ if __name__ == "__main__":
     LOGGER = logging.getLogger('SecAppWrapper')
     LOGGER.setLevel(logging.INFO)
     # Create FileHandler to save logs in File.
-    LOG_FILE = '/var/log/SecAppWrapper.log'
+    LOG_FILE = 'SecAppWrapper.log'
     FILE_HANDLER = logging.FileHandler(LOG_FILE)
     # Format LOGGER
     LOGGER_FORMATTER = logging.Formatter('%(asctime)s <%(name)s> - <%(levelname)s> : %(message)s')
